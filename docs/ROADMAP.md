@@ -122,3 +122,56 @@ e Rm 1.17, exatamente o que Paulo tomou do profeta.
   AT é hebraico, então a marca do lado do AT não se aplicaria a ele.
 - As marcas seguem a contagem de palavras da UBS, com o mesmo problema de
   alinhamento do item anterior.
+
+## Documentação
+
+### Imagens das extensões
+
+**Hoje.** Os READMEs do VS Code e do Sublime só descrevem os comandos em
+texto; nada mostra o resultado. O efeito do *inserir* num arquivo Typst,
+por exemplo, se entende em poucos segundos de animação e custa um
+parágrafo em texto.
+
+**O que mudaria.** Uma imagem por comando principal, perto do topo de
+cada README (português e inglês):
+
+| Arquivo | O que mostra |
+| --- | --- |
+| `vscode-inserir.gif` | num `.typ`, `Rm 8.28` e `Ctrl+Alt+Shift+B`: a referência vira a linha `// conferido` e o `#bref(...)`. É a imagem do topo |
+| `vscode-original.png` | `Jo 3.16` e `Ctrl+Alt+O`: a aba do interlinear ao lado do arquivo |
+| `vscode-strong.gif` | `Ctrl`+clique num `G0025` do interlinear abrindo o verbete |
+| `vscode-traducoes.png` | a lista de traduções com ara, naa e nvi marcadas, e o resultado lado a lado |
+| `sublime-consultar.png` | a janela flutuante do *consultar* |
+| `sublime-original.png` | a aba *Bíblia* com o interlinear |
+
+**Onde ficam.** Em `docs/images/`, fora das pastas das extensões, para
+não entrarem no `.vsix` nem no espelho do Sublime. Os READMEs as citam
+por URL absoluta
+(`https://raw.githubusercontent.com/Casara/biblia-cli/main/docs/images/...`),
+o único endereço que funciona igual no GitHub, no Marketplace, no Open
+VSX e no packagecontrol.io. O Marketplace recusa SVG no README: só PNG e
+GIF.
+
+**Como gerar.**
+
+- Editor com fonte um pouco maior que a de uso, tema padrão, janela com
+  cerca de 1000 px de largura e só o necessário à vista (sem barra
+  lateral, sem outros arquivos abertos).
+- Dados de exemplo: um `licao.typ` e um `notas.md` com duas ou três
+  referências; nada pessoal na tela (caminhos, nome de usuário).
+- PNG: a captura de tela do sistema, recortada na janela.
+- GIF: no GNOME, `Ctrl+Shift+Alt+R` grava a tela em `.webm`; depois:
+
+  ```sh
+  ffmpeg -i gravacao.webm \
+    -vf "fps=12,scale=1000:-1:flags=lanczos,split[a][b];[a]palettegen[p];[b][p]paletteuse" \
+    docs/images/vscode-inserir.gif
+  ```
+
+  De 3 a 8 segundos cada, até cerca de 3 MB; uma pausa de um segundo no
+  fim, para o resultado ficar legível antes de recomeçar.
+
+**Antes de publicar.** As imagens precisam estar na `main` antes da
+versão das extensões que as cita; senão, as páginas das lojas mostram
+links quebrados. Os textos alternativos (`![...]`) descrevem a ação,
+porque são o que um leitor de tela lê.

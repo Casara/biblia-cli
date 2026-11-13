@@ -91,18 +91,43 @@ Gitpod). É opcional; se não quiser, apague o job `open-vsx` do
    npx ovsx@1.3.0 create-namespace casara -p <token>
    ```
 
-   O namespace tem de ser igual ao `publisher` do `package.json`. Criar
-   não dá exclusividade: para ser o único a publicar nele, peça a posse
-   abrindo uma *issue* em
+   O namespace tem de ser igual ao `publisher` do `package.json`, com as
+   mesmas maiúsculas e minúsculas. Criar não dá exclusividade: para ser o
+   único a publicar nele, peça a posse abrindo uma *issue* em
    <https://github.com/EclipseFdn/open-vsx.org/issues> (escolha o modelo
-   de pedido de posse de namespace). Depois, apague o token.
-4. **Autorize a Action.** Nas configurações do namespace no
-   open-vsx.org, cadastre a Action como *trusted publisher*: repositório
-   `Casara/biblia-cli`, workflow `vscode.yml`, ambiente `open-vsx`. Os
-   nomes exatos dos campos estão no
-   [guia de publicação do Open VSX](https://github.com/eclipse/openvsx/wiki/Publishing-Extensions);
-   eles podem mudar.
-5. **Crie o ambiente no GitHub:** `open-vsx`, como no passo 3 do
+   de pedido de posse de namespace). Guarde o token para o passo 4.
+4. **Primeira versão, com o token.** A Action só pode ser autorizada
+   para uma extensão que já existe no Open VSX, com ao menos uma versão
+   ativa; o cadastro de uma extensão ainda não publicada é recusado.
+   Então a primeira versão sai à mão: gere o `.vsix` (o artefato
+   **vsix** da Action, ou
+   `npx @vscode/vsce@4.1.0 package --no-dependencies` em `editors/vscode`)
+   e rode:
+
+   ```sh
+   npx ovsx@1.3.0 publish biblia-0.3.0.vsix -p <token>
+   ```
+
+   A extensão leva alguns minutos para aparecer, enquanto o Open VSX a
+   verifica.
+5. **Autorize a Action.** Em
+   <https://open-vsx.org/user-settings/trusted-publishers>, escolha o
+   namespace `casara` e a extensão `biblia` (o cadastro é **por
+   extensão**, não por namespace) e preencha:
+
+   | Campo | Valor |
+   | --- | --- |
+   | Organization or User name | `Casara` |
+   | Repository name | `biblia-cli` |
+   | Workflow filename | `vscode.yml` |
+   | Environment name | `open-vsx` |
+
+   Sem esse cadastro, a Action falha com *No trusted publisher matches
+   the presented token*. Se todas as versões da extensão forem apagadas,
+   o cadastro para de valer, mesmo continuando na página. Detalhes no
+   [guia de Trusted Publishing do Open VSX](https://github.com/eclipse/openvsx/wiki/Trusted-Publishing).
+6. **Apague o token.** Daqui em diante, a Action publica sozinha.
+7. **Crie o ambiente no GitHub:** `open-vsx`, como no passo 3 do
    Marketplace.
 
 ### A cada versão da extensão
@@ -134,7 +159,8 @@ contornar:
 2. Em <https://marketplace.visualstudio.com/manage>, clique em **New
    extension › Visual Studio Code** e envie o `.vsix`. Para uma versão
    nova de uma extensão que já existe, use **⋯ › Update** na linha dela.
-3. No Open VSX, sem a Action, publica-se com um token:
+3. No Open VSX, sem a Action, publica-se com um token (é assim a
+   primeira versão, veja *Uma vez só: Open VSX*):
    `npx ovsx@1.3.0 publish biblia-0.2.0.vsix -p <token>`.
 
 ## 3. Pacote do Sublime Text
