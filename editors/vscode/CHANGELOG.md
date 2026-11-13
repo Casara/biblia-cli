@@ -3,7 +3,7 @@
 Mudanças da extensão do VS Code. As do programa `biblia` estão no
 `CHANGELOG.md` da raiz do repositório.
 
-## [Não publicado]
+## [0.3.0] - 2026-11-13
 
 ### Adicionado
 
@@ -46,4 +46,5 @@ Mudanças da extensão do VS Code. As do programa `biblia` estão no
   (`.md` → `md`, `.typ` → `typ`). Num arquivo sem formato associado, vale
   o `formato_filtro` do `~/.config/biblia/config.json`.
 
+[0.3.0]: https://github.com/Casara/biblia-cli/tree/vscode-v0.3.0
 [0.2.0]: https://github.com/Casara/biblia-cli/tree/vscode-v0.2.0

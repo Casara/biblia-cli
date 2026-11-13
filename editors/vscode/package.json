@@ -2,7 +2,7 @@
   "name": "biblia",
   "displayName": "Bíblia (biblia-cli)",
   "description": "Bible verses in several translations, with the original Hebrew/Greek, Strong's numbers, dictionary senses and parallel passages — through the biblia command-line tool. Versículos em várias traduções, original, Strong e paralelos.",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "publisher": "casara",
   "license": "MIT",
   "icon": "icon.png",
