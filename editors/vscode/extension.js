@@ -9,6 +9,18 @@
 //                          its parallel passages
 // biblia.inserirParalelos  keeps each selected reference and inserts the
 //                          text of its parallel passages on the lines after
+// biblia.original          shows the selected reference with the original
+//                          Hebrew/Greek words (-s) in a read-only tab
+// biblia.strong            lexicon entry of the Strong number under the
+//                          cursor, or a search by transliteration or gloss
+// biblia.consultarVersoes  asks for the translations, then works like
+//                          biblia.consultar
+// biblia.inserirVersoes    asks for the translations, then works like
+//                          biblia.inserir
+//
+// The interlinear and the lexicon open as read-only "biblia:" documents
+// rather than in the output panel: the cursor can stand on a Strong number
+// there, and biblia.strong (or a click on the number) looks it up.
 //
 // The text is inserted in the format of biblia.formato; "auto" picks it
 // from the file (biblia.formatosPorExtensao, then the file's language)
@@ -70,10 +82,13 @@ function config() {
   return vscode.workspace.getConfiguration("biblia");
 }
 
-function run(args, input) {
+// run calls the binary. versions picks the "-v" argument: undefined
+// takes biblia.versoes, a string overrides it for this run, and null sends
+// none ("strong" and "versoes" have no -v flag and would refuse it).
+function run(args, input, versions) {
   const exe = executable();
-  const versoes = config().get("versoes");
-  const full = versoes ? [...args, "-v", versoes] : args;
+  const v = versions === undefined ? config().get("versoes") : versions;
+  const full = v ? [...args, "-v", v] : args;
 
   return new Promise((resolve) => {
     const child = execFile(exe, full, { timeout: 30000 }, (err, stdout, stderr) => {
@@ -107,8 +122,8 @@ function formatArgs(document) {
   return fmt ? ["-f", fmt] : [];
 }
 
-async function show(refs, extra = []) {
-  const { stdout, stderr } = await run(["-f", "texto", ...extra, refs]);
+async function show(refs, extra = [], versions) {
+  const { stdout, stderr } = await run(["-f", "texto", ...extra, refs], undefined, versions);
   output.clear();
   output.appendLine(stdout.trimEnd() || stderr.trimEnd());
   output.show(true);
@@ -128,13 +143,13 @@ function selectedRefs(editor) {
     .join("; ");
 }
 
-async function inserir() {
+async function inserir(versions) {
   const editor = vscode.window.activeTextEditor;
   if (!editor) return;
   const fmt = formatArgs(editor.document);
   const ranges = referenceRanges(editor);
   const results = await Promise.all(
-    ranges.map((r) => run(["filtro", ...fmt], editor.document.getText(r)))
+    ranges.map((r) => run(["filtro", ...fmt], editor.document.getText(r), versions))
   );
   await editor.edit((edit) => {
     ranges.forEach((r, i) => {
@@ -179,12 +194,186 @@ async function perguntar() {
   if (refs && refs.trim()) await show(refs);
 }
 
+// Read-only "biblia:" documents: the text of each one, by URI. Kept after
+// the tab closes, so reopening it (Ctrl+Shift+T, back) shows the text.
+const scheme = "biblia";
+const pages = new Map();
+const pageChanged = new vscode.EventEmitter();
+
+const pageProvider = {
+  onDidChange: pageChanged.event,
+  provideTextDocumentContent: (uri) => pages.get(uri.toString()) || "",
+};
+
+// showPage opens text as a read-only tab titled name: beside the file
+// being edited, or in the same group when the current tab is already one
+// of these pages (following a Strong number from the interlinear). The
+// interlinear opens pinned (preview false), so the lexicon entries looked
+// up from it, which open as previews and replace one another, leave it in
+// place.
+async function showPage(name, text, preview) {
+  const uri = vscode.Uri.from({ scheme, path: "/" + name.replace(/[\\/]/g, "-") });
+  const key = uri.toString();
+  const known = pages.has(key);
+  pages.set(key, text);
+  if (known) pageChanged.fire(uri);
+
+  const doc = await vscode.workspace.openTextDocument(uri);
+  const current = vscode.window.activeTextEditor;
+  const inPage = current && current.document.uri.scheme === scheme;
+  await vscode.window.showTextDocument(doc, {
+    viewColumn: inPage ? current.viewColumn : vscode.ViewColumn.Beside,
+    preview,
+  });
+}
+
+// showResult opens the answer of a call as a page, or warns when there is
+// none. Notes on stderr next to an answer ("glosas em inglês...") become a
+// warning too.
+async function showResult(name, { stdout, stderr }, preview = true) {
+  const err = stderr.trim();
+  if (!stdout.trim()) {
+    vscode.window.showWarningMessage(err || "Bíblia: nada encontrado.");
+    return;
+  }
+  await showPage(name, stdout, preview);
+  if (err) vscode.window.showWarningMessage(err);
+}
+
+async function original() {
+  const editor = vscode.window.activeTextEditor;
+  if (!editor) return;
+  const refs = selectedRefs(editor);
+  if (refs) await showResult(refs + " (original)", await run(["-f", "texto", "-s", refs]), false);
+}
+
+// A Strong number as the tool takes it: G25, g0025, H7451b, H2603A.
+const strongPattern = /\b[HGhg]\d{1,4}[A-Za-z]?\b/;
+const strongExact = new RegExp("^" + strongPattern.source + "$");
+
+// strongUnderCursor returns the selected text, or the Strong number the
+// cursor stands on (a whole interlinear line would carry the word, the
+// transliteration and the gloss too).
+function strongUnderCursor(editor) {
+  const sel = editor.selection;
+  if (!sel.isEmpty) return editor.document.getText(sel).trim();
+  const range = editor.document.getWordRangeAtPosition(sel.active, strongPattern);
+  return range ? editor.document.getText(range) : "";
+}
+
+async function strong(arg) {
+  let query = typeof arg === "string" ? arg : "";
+  const editor = vscode.window.activeTextEditor;
+  if (!query && editor) query = strongUnderCursor(editor);
+
+  if (!strongExact.test(query)) {
+    query = await vscode.window.showInputBox({
+      prompt: "Número de Strong (H2617, G25), transliteração ou glosa",
+      placeHolder: "glosas no idioma dos dicionários: hebraico em português, grego em espanhol",
+      value: query.split("\n")[0],
+    });
+    query = query && query.trim();
+    if (!query) return;
+  }
+
+  if (strongExact.test(query)) {
+    await showResult(query.toUpperCase(), await run(["strong", query, "-c"], undefined, null));
+    return;
+  }
+
+  const how = await vscode.window.showQuickPick(
+    [
+      { label: "Transliteração", description: `strong -tr ${query}`, flag: "-tr" },
+      { label: "Glosa", description: `strong -glosa ${query}`, flag: "-glosa" },
+    ],
+    { placeHolder: `Buscar “${query}” por…` }
+  );
+  if (how) await showResult(`${how.label}: ${query}`, await run(["strong", how.flag, query], undefined, null));
+}
+
+// strongLinks makes every Strong number in a "biblia:" page clickable.
+const strongLinks = {
+  provideDocumentLinks(doc) {
+    const links = [];
+    const all = new RegExp(strongPattern.source, "g");
+    for (let i = 0; i < doc.lineCount; i++) {
+      const text = doc.lineAt(i).text;
+      for (const m of text.matchAll(all)) {
+        const range = new vscode.Range(i, m.index, i, m.index + m[0].length);
+        const target = vscode.Uri.parse(
+          "command:biblia.strong?" + encodeURIComponent(JSON.stringify([m[0]]))
+        );
+        const link = new vscode.DocumentLink(range, target);
+        link.tooltip = "Bíblia: Strong " + m[0];
+        links.push(link);
+      }
+    }
+    return links;
+  },
+};
+
+// pickVersions asks for the translations of one run, starting from the
+// last choice (or biblia.versoes). It returns a comma-separated list, or
+// undefined when the reader gives up.
+async function pickVersions(context) {
+  const { stdout, stderr } = await run(["versoes"], undefined, null);
+  const items = stdout
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .map((line) => {
+      const [id, ...rest] = line.split(/\s+/);
+      return { label: id, description: rest.join(" ") };
+    });
+  if (!items.length) {
+    vscode.window.showWarningMessage(stderr.trim() || "Bíblia: lista de traduções vazia.");
+    return undefined;
+  }
+
+  const last = context.globalState.get("versoes") || config().get("versoes") || "";
+  const chosen = new Set(last.split(",").map((v) => v.trim().toLowerCase()).filter(Boolean));
+  items.sort((a, b) => chosen.has(b.label) - chosen.has(a.label));
+  items.forEach((item) => (item.picked = chosen.has(item.label)));
+
+  const picked = await vscode.window.showQuickPick(items, {
+    canPickMany: true,
+    placeHolder: "Traduções desta consulta",
+  });
+  if (!picked || !picked.length) return undefined;
+
+  const versions = picked.map((p) => p.label).join(",");
+  await context.globalState.update("versoes", versions);
+  return versions;
+}
+
 function activate(context) {
   output = vscode.window.createOutputChannel("Bíblia");
+
+  const consultarVersoes = async () => {
+    const editor = vscode.window.activeTextEditor;
+    if (!editor) return;
+    const refs = selectedRefs(editor);
+    if (!refs) return;
+    const versions = await pickVersions(context);
+    if (versions) await show(refs, [], versions);
+  };
+  const inserirVersoes = async () => {
+    if (!vscode.window.activeTextEditor) return;
+    const versions = await pickVersions(context);
+    if (versions) await inserir(versions);
+  };
+
   context.subscriptions.push(
     output,
+    pageChanged,
+    vscode.workspace.registerTextDocumentContentProvider(scheme, pageProvider),
+    vscode.languages.registerDocumentLinkProvider({ scheme }, strongLinks),
+    vscode.commands.registerCommand("biblia.original", original),
+    vscode.commands.registerCommand("biblia.strong", strong),
+    vscode.commands.registerCommand("biblia.consultarVersoes", consultarVersoes),
+    vscode.commands.registerCommand("biblia.inserirVersoes", inserirVersoes),
     vscode.commands.registerCommand("biblia.consultar", consultar),
-    vscode.commands.registerCommand("biblia.inserir", inserir),
+    vscode.commands.registerCommand("biblia.inserir", () => inserir()),
     vscode.commands.registerCommand("biblia.perguntar", perguntar),
     vscode.commands.registerCommand("biblia.paralelos", paralelos),
     vscode.commands.registerCommand("biblia.inserirParalelos", inserirParalelos)

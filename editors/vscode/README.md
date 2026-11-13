@@ -49,9 +49,22 @@ The extension looks for `biblia` on the `PATH` and then in
 | **Bíblia: consultar…** | — | asks for a reference and shows its text |
 | **Bíblia: passagens paralelas da referência selecionada** | `Ctrl+Alt+L` | shows the text and the list of parallel passages (Old Testament quotations in the New, Gospel parallels...) |
 | **Bíblia: inserir o texto das passagens paralelas** | `Ctrl+Alt+Shift+L` | keeps the reference and inserts, on the lines after it, the text of each parallel passage, saying what it is |
+| **Bíblia: consultar com o original (hebraico/grego e Strong)** | `Ctrl+Alt+O` | opens a read-only tab with the text and, word by word, the Hebrew/Greek original, transliteration, Strong number, gloss and grammar |
+| **Bíblia: Strong…** | — | the lexicon entry of the Strong number under the cursor (`G25`, `H7451b`); otherwise asks for a number, transliteration or gloss |
+| **Bíblia: consultar em outras traduções…** | — | asks which translations to use this time, then works like *consultar* |
+| **Bíblia: inserir texto em outras traduções…** | — | asks which translations to use this time, then works like *inserir* |
 
 With no selection, the cursor line counts. References are typed the
 Brazilian way: `Jo 3.16`, `1 Co 13.4-7`, `Rm 5.8; 6.23`, `Sl 23`.
+
+The Strong numbers in the original tab are links: `Ctrl`+click
+(`Cmd`+click on macOS) opens the entry beside it in the same group,
+leaving the interlinear open; so does **Bíblia: Strong…** with the cursor
+on a number. The gloss search uses the dictionaries' language:
+Portuguese for Hebrew, Spanish for Greek (the UBS has no Portuguese
+Greek dictionary yet). The translation picker remembers the last choice;
+`biblia.versoes` stays as it is. The original and Strong commands need
+`biblia dados baixar`.
 `Ctrl+Alt+B` replaces VS Code's own shortcut for the secondary side bar;
 change any of them under *Keyboard Shortcuts*.
 

@@ -3,6 +3,26 @@
 Mudanças da extensão do VS Code. As do programa `biblia` estão no
 `CHANGELOG.md` da raiz do repositório.
 
+## [Não publicado]
+
+### Adicionado
+
+- **Bíblia: consultar com o original (hebraico/grego e Strong)**
+  (`Ctrl+Alt+O`): o `-s` do programa, numa aba só de leitura ao lado do
+  arquivo. Os números de Strong dessa aba são links para o verbete
+  (`Ctrl`+clique).
+- **Bíblia: Strong…**: o verbete do número sob o cursor ou selecionado;
+  sem número, pergunta o número, a transliteração (`-tr`) ou a glosa
+  (`-glosa`).
+- **Bíblia: consultar em outras traduções…** e **inserir texto em outras
+  traduções…**: escolha das traduções só para aquela vez, numa lista com
+  seleção múltipla que lembra a última escolha.
+
+### Corrigido
+
+- O `biblia.versoes` não é mais enviado aos subcomandos que não aceitam
+  `-v` (`strong`, `versoes`).
+
 ## [0.2.0] - 2026-11-13
 
 ### Adicionado

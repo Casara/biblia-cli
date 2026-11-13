@@ -49,6 +49,22 @@
       {
         "command": "biblia.inserirParalelos",
         "title": "Bíblia: inserir o texto das passagens paralelas"
+      },
+      {
+        "command": "biblia.original",
+        "title": "Bíblia: consultar com o original (hebraico/grego e Strong)"
+      },
+      {
+        "command": "biblia.strong",
+        "title": "Bíblia: Strong…"
+      },
+      {
+        "command": "biblia.consultarVersoes",
+        "title": "Bíblia: consultar em outras traduções…"
+      },
+      {
+        "command": "biblia.inserirVersoes",
+        "title": "Bíblia: inserir texto em outras traduções…"
       }
     ],
     "keybindings": [
@@ -70,6 +86,11 @@
       {
         "command": "biblia.inserirParalelos",
         "key": "ctrl+alt+shift+l",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "biblia.original",
+        "key": "ctrl+alt+o",
         "when": "editorTextFocus"
       }
     ],
