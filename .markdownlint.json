@@ -8,7 +8,9 @@
     "code_blocks": false,
     "tables": false
   },
-  "MD024": true,
+  "MD024": {
+    "siblings_only": true
+  },
   "MD033": {
     "allowed_elements": ["div", "img", "picture", "source", "strong"]
   },
