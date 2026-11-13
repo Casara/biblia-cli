@@ -1,0 +1,5 @@
+node_modules/**
+*.vsix
+# Source of icon.png; the Marketplace takes PNG only.
+images/**
+README.pt-BR.md

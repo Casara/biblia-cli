@@ -1,0 +1,34 @@
+# Binaries
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.vsix
+
+# make build output
+/bin/
+
+# Coverage and test artifacts
+*.out
+coverage.*
+*.coverprofile
+mutation.json
+
+# Local working notes, not meant to be committed.
+NOTES.md
+TEMP.md
+
+# Claude Code. .claude/settings.json IS committed (shared permission
+# allowlist, derived from the Makefile targets); personal approvals and
+# absolute paths belong in settings.local.json.
+.claude/settings.local.json
+
+# Editor-specific
+editors/vscode/node_modules/
+
+.DS_Store
+
+# GoReleaser output
+/dist/

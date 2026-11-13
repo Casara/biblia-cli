@@ -1,0 +1,57 @@
+version: 3
+workdir: .
+
+excludeFiles:
+  - "^.*_test\\.go$"
+
+vendors:
+  sqlite: { in: modernc.org/sqlite(/**)? }
+  xtext: { in: golang.org/x/text(/**)? }
+  xterm: { in: golang.org/x/term(/**)? }
+
+components:
+  # Offline knowledge: the canon and reference parsing.
+  books: { in: internal/books }
+  ref: { in: internal/ref }
+  # Remote source (Bíblia Online MCP) and local storage.
+  bibliaonline: { in: internal/bibliaonline }
+  cache: { in: internal/cache }
+  step: { in: internal/step }
+  ubs: { in: internal/ubs }
+  download: { in: internal/download }
+  # Pure translation of grammar terms.
+  grammar: { in: internal/grammar }
+  config: { in: internal/config }
+  # Orchestration and output.
+  lookup: { in: internal/lookup }
+  render: { in: internal/render }
+  cmd: { in: "cmd/**" }
+
+commonComponents: []
+
+# A component absent from this list (bibliaonline, config, download,
+# grammar) may not import any other package of this module: the server
+# client only sends a string and parses the answer, config only knows file
+# locations, download only fetches files, grammar only maps terms.
+deps:
+  books:
+    canUse: [xtext]
+  ref:
+    mayDependOn: [books]
+  cache:
+    canUse: [sqlite]
+  # step and ubs stand alone: book codes and numbers come from their own
+  # files; cmd maps them onto the canon.
+  step:
+    mayDependOn: [download]
+    canUse: [sqlite, xtext]
+  ubs:
+    mayDependOn: [download]
+    canUse: [sqlite]
+  lookup:
+    mayDependOn: [bibliaonline, cache, ref]
+  render:
+    mayDependOn: [lookup, ref, step, ubs]
+  cmd:
+    mayDependOn: [bibliaonline, books, cache, config, grammar, lookup, ref, render, step, ubs]
+    canUse: [xterm]

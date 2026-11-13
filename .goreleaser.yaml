@@ -1,0 +1,50 @@
+# Release binaries of the biblia CLI, built by .github/workflows/release.yml
+# when a CLI tag (v0.1.0) is pushed. Try it locally without publishing:
+#   go run github.com/goreleaser/goreleaser/v2@v2.19.0 release --snapshot --clean
+version: 2
+
+project_name: biblia
+
+builds:
+  - id: biblia
+    main: ./cmd/biblia
+    binary: biblia
+    # modernc.org/sqlite is pure Go: no C toolchain, so every target
+    # cross-compiles from one Linux runner.
+    env:
+      - CGO_ENABLED=0
+    flags:
+      - -trimpath
+    ldflags:
+      - -s -w -X main.version={{ .Version }}
+    goos: [linux, darwin, windows]
+    goarch: [amd64, arm64]
+
+archives:
+  - id: biblia
+    formats: [tar.gz]
+    format_overrides:
+      - goos: windows
+        formats: [zip]
+    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    files:
+      - LICENSE
+      - README.md
+      - README.pt-BR.md
+      - CHANGELOG.md
+      - docs/SOURCES.md
+
+checksum:
+  name_template: checksums.txt
+
+# CHANGELOG.md is written by hand; the release page points to it.
+changelog:
+  disable: true
+
+release:
+  # The editor plugins are tagged in the same repository (vscode-v*,
+  # sublime-*); only CLI tags make a release here.
+  mode: replace
+  footer: |
+    Changes: [CHANGELOG.md](https://github.com/Casara/biblia-cli/blob/{{ .Tag }}/CHANGELOG.md).
+    Data sources and their terms: [docs/SOURCES.md](https://github.com/Casara/biblia-cli/blob/{{ .Tag }}/docs/SOURCES.md).

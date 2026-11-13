@@ -1,0 +1,121 @@
+{
+  "name": "biblia",
+  "displayName": "Bíblia (biblia-cli)",
+  "description": "Bible verses in several translations, with the original Hebrew/Greek, Strong's numbers, dictionary senses and parallel passages — through the biblia command-line tool. Versículos em várias traduções, original, Strong e paralelos.",
+  "version": "0.2.0",
+  "publisher": "casara",
+  "license": "MIT",
+  "icon": "icon.png",
+  "galleryBanner": {
+    "color": "#1f3c61",
+    "theme": "dark"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Casara/biblia-cli.git",
+    "directory": "editors/vscode"
+  },
+  "homepage": "https://github.com/Casara/biblia-cli/tree/main/editors/vscode#readme",
+  "bugs": {
+    "url": "https://github.com/Casara/biblia-cli/issues"
+  },
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Education",
+    "Other"
+  ],
+  "main": "./extension.js",
+  "activationEvents": [],
+  "contributes": {
+    "commands": [
+      {
+        "command": "biblia.consultar",
+        "title": "Bíblia: consultar referência selecionada"
+      },
+      {
+        "command": "biblia.inserir",
+        "title": "Bíblia: inserir texto no lugar da referência"
+      },
+      {
+        "command": "biblia.perguntar",
+        "title": "Bíblia: consultar…"
+      },
+      {
+        "command": "biblia.paralelos",
+        "title": "Bíblia: passagens paralelas da referência selecionada"
+      },
+      {
+        "command": "biblia.inserirParalelos",
+        "title": "Bíblia: inserir o texto das passagens paralelas"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "biblia.consultar",
+        "key": "ctrl+alt+b",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "biblia.inserir",
+        "key": "ctrl+alt+shift+b",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "biblia.paralelos",
+        "key": "ctrl+alt+l",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "biblia.inserirParalelos",
+        "key": "ctrl+alt+shift+l",
+        "when": "editorTextFocus"
+      }
+    ],
+    "configuration": {
+      "title": "Bíblia",
+      "properties": {
+        "biblia.executavel": {
+          "type": "string",
+          "default": "biblia",
+          "description": "Caminho do binário biblia. Com só o nome (\"biblia\"), procura no PATH e depois em ~/.local/bin e ~/go/bin."
+        },
+        "biblia.versoes": {
+          "type": "string",
+          "default": "",
+          "description": "Traduções separadas por vírgula (ex.: ara,naa). Vazio = as do ~/.config/biblia/config.json."
+        },
+        "biblia.formato": {
+          "type": "string",
+          "default": "auto",
+          "description": "Formato dos comandos de inserir: auto (pelo tipo do arquivo), linha, md, typ ou um modelo seu. Em auto, um arquivo sem formato associado usa o formato_filtro do ~/.config/biblia/config.json."
+        },
+        "biblia.formatosPorExtensao": {
+          "type": "object",
+          "default": {
+            ".md": "md",
+            ".markdown": "md",
+            ".typ": "typ"
+          },
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "No formato auto: extensão do arquivo → formato. Um arquivo sem extensão listada usa a linguagem do editor (Markdown → md, Typst → typ)."
+        }
+      }
+    }
+  },
+  "keywords": [
+    "bible",
+    "bíblia",
+    "biblia",
+    "strong",
+    "hebrew",
+    "greek",
+    "scripture",
+    "verses",
+    "typst",
+    "markdown"
+  ]
+}

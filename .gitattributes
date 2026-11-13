@@ -1,0 +1,2 @@
+# Default: normalize everything to LF
+* text=auto eol=lf

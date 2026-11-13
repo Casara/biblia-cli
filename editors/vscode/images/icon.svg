@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
+  <!-- Source of icon.png (the Marketplace takes PNG only):
+       magick -background none -density 384 icon.svg -resize 256x256 icon.png -->
+  <rect width="256" height="256" rx="44" fill="#1f3c61"/>
+  <!-- book shadow -->
+  <path d="M30 196 Q128 176 226 196 L226 206 Q128 188 30 206 Z" fill="#0d1d33" opacity="0.55"/>
+  <!-- left page -->
+  <path d="M128 78 C104 62 66 58 34 66 L34 190 C66 182 104 186 128 202 Z" fill="#f7f3e8"/>
+  <!-- right page -->
+  <path d="M128 78 C152 62 190 58 222 66 L222 190 C190 182 152 186 128 202 Z" fill="#ffffff"/>
+  <!-- spine shading -->
+  <path d="M128 78 L128 202" stroke="#c9c1ab" stroke-width="3"/>
+  <!-- text lines: thin rounded bars (ImageMagick's renderer skips stroked open paths) -->
+  <g fill="#9aa6b8">
+    <rect x="50" y="92" width="62" height="5" rx="2.5"/>
+    <rect x="50" y="110" width="62" height="5" rx="2.5"/>
+    <rect x="50" y="128" width="62" height="5" rx="2.5"/>
+    <rect x="50" y="146" width="62" height="5" rx="2.5"/>
+    <rect x="50" y="164" width="44" height="5" rx="2.5"/>
+    <rect x="144" y="92" width="18" height="5" rx="2.5"/>
+    <rect x="144" y="110" width="18" height="5" rx="2.5"/>
+    <rect x="144" y="128" width="18" height="5" rx="2.5"/>
+    <rect x="144" y="146" width="62" height="5" rx="2.5"/>
+    <rect x="144" y="164" width="62" height="5" rx="2.5"/>
+  </g>
+  <!-- ribbon bookmark -->
+  <path d="M168 62 L168 128 L180 116 L192 128 L192 60 C184 59 176 60 168 62 Z" fill="#e0a526"/>
+</svg>

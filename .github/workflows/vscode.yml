@@ -1,0 +1,78 @@
+name: VS Code extension
+
+# A tag vscode-v0.2.0 packages editors/vscode and publishes it to the
+# Visual Studio Marketplace and to Open VSX, with no stored token: both
+# registries trust this workflow through OpenID Connect (see
+# docs/PUBLICAR.md for the one-time setup on each side). The .vsix is also
+# kept as a run artifact, so it can be uploaded by hand if a registry
+# refuses it.
+on:
+  push:
+    tags:
+      - "vscode-v*"
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 20
+
+      # The tag and package.json must agree: the registries take the
+      # version from the manifest, the release history from the tag.
+      - name: Check the version
+        working-directory: editors/vscode
+        run: |
+          manifest="$(node -p "require('./package.json').version")"
+          tag="${GITHUB_REF_NAME#vscode-v}"
+          if [ "$manifest" != "$tag" ]; then
+            echo "package.json diz $manifest, a tag diz $tag" >&2
+            exit 1
+          fi
+
+      - name: Package
+        working-directory: editors/vscode
+        run: npx --yes @vscode/vsce@4.1.0 package --no-dependencies -o "../../biblia-${GITHUB_REF_NAME#vscode-v}.vsix"
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: vsix
+          path: biblia-*.vsix
+
+  marketplace:
+    needs: package
+    runs-on: ubuntu-latest
+    # Must match the environment named in the Marketplace's Trusted
+    # Publishing policy.
+    environment: vscode-marketplace
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          name: vsix
+
+      - name: Publish to the Visual Studio Marketplace
+        run: npx --yes @vscode/vsce@4.1.0 publish --oidc --packagePath biblia-*.vsix
+
+  open-vsx:
+    needs: package
+    runs-on: ubuntu-latest
+    # Must match the environment registered as a trusted publisher of the
+    # namespace on open-vsx.org.
+    environment: open-vsx
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          name: vsix
+
+      - name: Publish to Open VSX
+        run: npx --yes ovsx@1.3.0 publish --trusted-publishing --packagePath biblia-*.vsix

@@ -1,0 +1,162 @@
+version: "2"
+
+linters:
+  # No `enable:` list on purpose: with `default: all`, every linter is on
+  # except what's listed in `disable` below.
+  default: all
+  disable:
+    # Package boundaries are enforced by .go-arch-lint.yml instead.
+    - depguard
+    - gomodguard
+    # Both names exist in golangci-lint v2; disabling only one still
+    # leaves the other's whitespace-grouping opinions active.
+    - wsl_v5
+    - wsl
+    # The deprecated original stays enabled under `default: all`; its
+    # successor exhaustruct_v5 (configured below) is the one used.
+    - exhaustruct
+    # Table-driven tests run in well under a second serially.
+    - paralleltest
+    # User-facing text is Portuguese ("editores", "Apocalipse"), which an
+    # English spell checker reports as typos.
+    - misspell
+  settings:
+    errcheck:
+      exclude-functions:
+        # Writing to the terminal: a failed write has nowhere to be
+        # reported, and the next write would fail the same way.
+        - fmt.Fprint
+        - fmt.Fprintf
+        - fmt.Fprintln
+    tagliatelle:
+      case:
+        rules:
+          # The config file keys are Portuguese snake_case
+          # ("formato_filtro"), the common style for hand-edited JSON.
+          json: snake
+    cyclop:
+      max-complexity: 16
+    varnamelen:
+      min-name-length: 2
+      ignore-decls:
+        - t testing.T
+        - i int
+        - n int
+        - v int
+        - s string
+        - r ref.Ref
+        - c *cache.Cache
+        - e *env
+        - e Entry
+        - e step.Entry
+        - e cache.Entry
+        - o *lookupOptions
+        - w step.Word
+        - w Word
+        - b strings.Builder
+        - d Data
+        - d render.Data
+        - p Passage
+        - p bibliaonline.Passage
+        - m []string
+        - fs *flag.FlagSet
+        - s *session
+        - s *lookup.Service
+        - f *fakeServer
+        - w io.Writer
+        - w http.ResponseWriter
+        - t *Templates
+        - p Paths
+        - c Config
+        - d ubs.Dictionary
+        - d Dictionary
+        - p parallel
+        - p ubs.Passage
+        - s ubs.Sense
+        - s Sense
+        - e rawEntry
+        - v ubs.Verse
+        - l WordLine
+    exhaustruct_v5:
+      ignore-patterns:
+        # Results, words and passages are filled in step by step as the
+        # data is read; their zero value is the meaningful start.
+        - '.*/lookup\.Result$'
+        - '.*/lookup\.Verse$'
+        - '.*/lookup\.Service$'
+        - '.*/step\.Word$'
+        - '.*/step\.Entry$'
+        - '.*/bibliaonline\.Passage$'
+        - '.*/bibliaonline\.Verse$'
+        - '.*/bibliaonline\.Bible$'
+        - '.*/cache\.Entry$'
+        - '.*/render\.Data$'
+        - '.*/render\.Terminal$'
+        - '.*/ref\.Ref$'
+        - '.*/ref\.Span$'
+        - '.*/config\.Config$'
+        - '.*/config\.Paths$'
+        - '.*/books\.Book$'
+        - '.*/ubs\.(Sense|Passage|Dictionary|Verse)$'
+        - '.*/render\.(WordLine|Parallel)$'
+        - 'net/http\.Client$'
+        # The CLI's own option and state holders, filled by flag parsing
+        # and as subcommands open what they need.
+        - '.*/cmd/biblia\.(env|session|lookupOptions|originals|dictSource|parallel)$'
+        - 'net/url\.URL$'
+    ireturn:
+      allow:
+        - anon
+        - error
+        - empty
+        - stdlib
+        - generic
+  exclusions:
+    rules:
+      # A CLI's whole job is printing to stdout/stderr, and its errors are
+      # the internal packages' already-contextualized messages.
+      - path: cmd/biblia/
+        linters:
+          - forbidigo
+          - wrapcheck
+      # The canon table and the alias maps are package-level by nature,
+      # built once in init() and only read afterwards.
+      - path: internal/books/books\.go
+        linters:
+          - gochecknoglobals
+          - gochecknoinits
+          - mnd
+      # Compiled regular expressions, sentinel errors and the built-in
+      # templates are package-level read-only values.
+      - linters:
+          - gochecknoglobals
+        source: '(regexp\.MustCompile|errors\.New|template\.FuncMap|Builtin|Files|amalgamated|usage|Dictionaries|nearby|portuguese|relations)'
+      # The table of grammatical terms repeats words by nature ("título"
+      # is a name type, a form and a gender in the legends), and its keys
+      # ("Person=First") are not credentials.
+      - path: internal/grammar/grammar\.go
+        linters:
+          - goconst
+          - gosec
+      # Test data: fixed rows and expected values.
+      - path: _test\.go
+        linters:
+          - exhaustruct_v5
+          - lll
+          - mnd
+          - funlen
+          - gochecknoglobals
+          - err113
+          - goconst
+
+formatters:
+  enable:
+    - gofmt
+    - goimports
+
+issues:
+  max-issues-per-linter: 0
+  max-same-issues: 0
+
+run:
+  timeout: 5m
