@@ -9,6 +9,10 @@ da [Bíblia Online](https://www.bibliaonline.com.br) também funcionam.
 
 *Read this in [English](https://github.com/Casara/biblia-cli/blob/main/editors/vscode/README.md).*
 
+![Num arquivo Typst, a referência Rm 8.28 vira o comentário "conferido" e a citação #bref; num arquivo Markdown, uma citação com a referência][inserir]
+
+[inserir]: https://raw.githubusercontent.com/Casara/biblia-cli/main/docs/images/vscode-inserir.gif
+
 ## Requisito: o programa `biblia`
 
 Esta extensão é uma interface: quem faz cada consulta é o programa de
@@ -65,6 +69,16 @@ feita e não muda o `biblia.versoes`. O original e o Strong precisam do
 `biblia dados baixar`. O
 `Ctrl+Alt+B` toma o lugar do atalho do VS Code para a barra lateral
 secundária; troque qualquer um em *Atalhos de teclado*.
+
+![O interlinear de Jo 3.16 numa aba ao lado do arquivo: palavra grega, transliteração, número de Strong, glosa e gramática][original]
+
+![Ctrl+clique no G0025 do interlinear abre o verbete em outra aba][strong]
+
+![A lista de traduções com ara e arc marcadas][traducoes]
+
+[original]: https://raw.githubusercontent.com/Casara/biblia-cli/main/docs/images/vscode-original.png
+[strong]: https://raw.githubusercontent.com/Casara/biblia-cli/main/docs/images/vscode-strong.gif
+[traducoes]: https://raw.githubusercontent.com/Casara/biblia-cli/main/docs/images/vscode-traducoes.png
 
 ## Configurações
 

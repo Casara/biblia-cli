@@ -3,6 +3,12 @@
 Mudanças da extensão do VS Code. As do programa `biblia` estão no
 `CHANGELOG.md` da raiz do repositório.
 
+## [Não publicado]
+
+### Documentação
+
+- README com imagens das extensões funcionando.
+
 ## [0.3.0] - 2026-11-13
 
 ### Adicionado

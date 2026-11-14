@@ -10,6 +10,10 @@ and the program's output are in Portuguese.
 
 *Leia isto em [português](https://github.com/Casara/biblia-cli/blob/main/editors/vscode/README.pt-BR.md).*
 
+![In a Typst file, the reference Rm 8.28 becomes the "conferido" comment and the #bref quotation; in a Markdown file, a quotation with the reference][inserir]
+
+[inserir]: https://raw.githubusercontent.com/Casara/biblia-cli/main/docs/images/vscode-inserir.gif
+
 ## Requirement: the `biblia` program
 
 This extension is a front end: every lookup is done by the **`biblia`**
@@ -67,6 +71,16 @@ Greek dictionary yet). The translation picker remembers the last choice;
 `biblia dados baixar`.
 `Ctrl+Alt+B` replaces VS Code's own shortcut for the secondary side bar;
 change any of them under *Keyboard Shortcuts*.
+
+![The interlinear of Jo 3.16 in a tab beside the file: Greek word, transliteration, Strong number, gloss and grammar][original]
+
+![Ctrl+click on G0025 in the interlinear opens the lexicon entry in another tab][strong]
+
+![The translation picker with ara and arc checked][traducoes]
+
+[original]: https://raw.githubusercontent.com/Casara/biblia-cli/main/docs/images/vscode-original.png
+[strong]: https://raw.githubusercontent.com/Casara/biblia-cli/main/docs/images/vscode-strong.gif
+[traducoes]: https://raw.githubusercontent.com/Casara/biblia-cli/main/docs/images/vscode-traducoes.png
 
 ## Settings
 
