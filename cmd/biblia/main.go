@@ -137,6 +137,10 @@ func dispatch(ctx context.Context, e *env, args []string) error {
 		return cmdCache(ctx, e, args[1:])
 	case "formatos":
 		return cmdFormats(e)
+	case "selecao", "seleção":
+		return cmdSelection(ctx, e, args[1:])
+	case "atalhos":
+		return cmdShortcuts(ctx, e, args[1:])
 	case "versao", "versão", "-version", "--version":
 		fmt.Fprintln(e.stdout, "biblia", version)
 
@@ -191,6 +195,11 @@ USO
   biblia strong -glosa <texto>       busca pela glosa (no idioma dos dicionários)
   biblia versoes [-todas]            traduções disponíveis no site
   biblia formatos                    lista os formatos de saída
+  biblia selecao [consultar|original|copiar] [-f formato]
+                                     consulta o texto selecionado em qualquer
+                                     programa: referência ou número de Strong
+  biblia atalhos instalar | remover  atalhos do GNOME para o selecao:
+                                     Super+B, Super+Alt+B, Super+Shift+B
   biblia dados baixar [step|ubs] [-enxuto]
                                      original, léxicos, dicionários e paralelos;
                                      -enxuto apaga os arquivos baixados após indexar

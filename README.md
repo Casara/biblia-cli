@@ -232,6 +232,9 @@ packages that enable key bindings.
 | **consultar…** | (command palette) | asks for a reference and shows its text |
 | **passagens paralelas** | `Ctrl+Alt+L` | shows the text and the list of parallels |
 | **inserir passagens paralelas** | `Ctrl+Alt+Shift+L` | keeps the reference and inserts, on the lines after it, the text of each parallel |
+| **consultar com o original** | `Ctrl+Alt+O` | opens a tab with the interlinear (`-s`) |
+| **Strong…** | (command palette) | the entry of the Strong number under the cursor, or a search by transliteration or gloss |
+| **consultar / inserir em outras traduções…** | (command palette) | picks the translations for that one time |
 
 With no selection, the cursor line counts. The inserted text's format
 defaults to `auto`: `.md` gets `md`, `.typ` gets `typ` (and, in a file
@@ -242,9 +245,9 @@ option, and `formato` also accepts a fixed format.
 - **Sublime Text:** through Package Control (package **Biblia**) or,
   from the source, `make sublime`, which links `editors/sublime` into the
   Packages folder (`~/.config/sublime-text-3` or `~/.config/sublime-text`).
-  Options and shortcuts under *Preferences › Package Settings › Bíblia*:
-  the suggested shortcuts are on the left; copy them, without the comment
-  slashes, into your own keymap on the right.
+  Options and shortcuts under *Preferences › Package Settings › Biblia*:
+  the suggested shortcuts are on the left; copy the ones you want into
+  your own keymap on the right.
 - **VS Code:** through the Marketplace (extension **Bíblia
   (biblia-cli)**) or, from the source, `make vscode`, which packages and
   installs the extension (requires Node.js). Options under *Settings ›
@@ -265,6 +268,39 @@ works: `biblia filtro -f linha` reads references on its input and returns
 their text. A line that is not a reference comes back unchanged. With
 `-p`, the filter returns only the text of each reference's parallel
 passages, and nothing else.
+
+## In any program (GNOME)
+
+GNOME has no context menu for selected text; instead, global keyboard
+shortcuts look up whatever is selected in any program (browser, PDF
+reader, terminal): a reference (`Jo 3.16`) or a Strong number (`G5293`,
+`H2617`).
+
+| Shortcut | Reference | Strong number |
+| --- | --- | --- |
+| `Super+B` | shows the text in a window | shows the lexicon entry (`strong -c`) |
+| `Super+Alt+B` | the same, with the original Hebrew/Greek (`-s`) | shows the lexicon entry |
+| `Super+Shift+B` | copies the text, ready to paste (`formato_filtro`) | copies the entry |
+
+Selecting is enough, no `Ctrl+C`; with nothing selected, the clipboard
+counts. In a reference's window, the **Traduções…** button opens the
+list of the site's translations, the current ones checked: pick one or
+several (side by side) and the window reopens with them. The choice
+lasts until the window closes; the next lookup goes back to
+`config.json`'s. Needs `zenity` and, on Wayland, `wl-clipboard` (`xclip` on X11).
+With `biblia` already on your `PATH`:
+
+```sh
+sudo apt install zenity wl-clipboard
+biblia atalhos instalar
+```
+
+The shortcuts live under *Settings › Keyboard › Custom Shortcuts*, where
+they can be changed; your other custom shortcuts are left alone. They
+call `biblia` by its full path: if you move it, run `instalar` again.
+`biblia atalhos remover` deletes them. To copy in another format, edit
+the shortcut's command in GNOME, adding `-f md` (or `typ`, `linha`, a
+template of yours) to `selecao copiar`.
 
 ## Where the files live
 

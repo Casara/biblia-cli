@@ -22,6 +22,8 @@ components:
   # Pure translation of grammar terms.
   grammar: { in: internal/grammar }
   config: { in: internal/config }
+  # The graphical session: selection, clipboard, windows, GNOME shortcuts.
+  desktop: { in: internal/desktop }
   # Orchestration and output.
   lookup: { in: internal/lookup }
   render: { in: internal/render }
@@ -29,10 +31,11 @@ components:
 
 commonComponents: []
 
-# A component absent from this list (bibliaonline, config, download,
-# grammar) may not import any other package of this module: the server
-# client only sends a string and parses the answer, config only knows file
-# locations, download only fetches files, grammar only maps terms.
+# A component absent from this list (bibliaonline, config, desktop,
+# download, grammar) may not import any other package of this module: the
+# server client only sends a string and parses the answer, config only
+# knows file locations, desktop only runs the session's programs, download
+# only fetches files, grammar only maps terms.
 deps:
   books:
     canUse: [xtext]
@@ -53,5 +56,5 @@ deps:
   render:
     mayDependOn: [lookup, ref, step, ubs]
   cmd:
-    mayDependOn: [bibliaonline, books, cache, config, grammar, lookup, ref, render, step, ubs]
+    mayDependOn: [bibliaonline, books, cache, config, desktop, grammar, lookup, ref, render, step, ubs]
     canUse: [xterm]

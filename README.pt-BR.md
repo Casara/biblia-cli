@@ -228,6 +228,9 @@ atalhos.
 | **consultar…** | (paleta de comandos) | pergunta a referência e mostra o texto |
 | **passagens paralelas** | `Ctrl+Alt+L` | mostra o texto e a lista de paralelos |
 | **inserir passagens paralelas** | `Ctrl+Alt+Shift+L` | mantém a referência e insere, nas linhas seguintes, o texto de cada paralelo |
+| **consultar com o original** | `Ctrl+Alt+O` | abre uma aba com o interlinear (`-s`) |
+| **Strong…** | (paleta de comandos) | o verbete do número sob o cursor, ou uma busca por transliteração ou glosa |
+| **consultar / inserir em outras traduções…** | (paleta de comandos) | escolhe as traduções só daquela vez |
 
 Sem seleção, vale a linha do cursor. O formato do que é inserido é, por
 padrão, `auto`: `.md` recebe `md`, `.typ` recebe `typ` (e, num arquivo
@@ -238,9 +241,9 @@ são uma opção do plugin, e `formato` também aceita um formato fixo.
 - **Sublime Text:** pelo Package Control (pacote **Biblia**) ou, a
   partir do código, `make sublime`, que liga `editors/sublime` à pasta de
   pacotes (`~/.config/sublime-text-3` ou `~/.config/sublime-text`).
-  Opções e atalhos em *Preferences › Package Settings › Bíblia*: os
-  atalhos sugeridos estão à esquerda; copie-os, sem as barras de
-  comentário, para o seu keymap, à direita.
+  Opções e atalhos em *Preferences › Package Settings › Biblia*: os
+  atalhos sugeridos estão à esquerda; copie os que quiser para o seu
+  keymap, à direita.
 - **VS Code:** pelo Marketplace (extensão **Bíblia (biblia-cli)**) ou, a
   partir do código, `make vscode`, que empacota e instala a extensão
   (requer Node.js). Opções em *Configurações › Bíblia*; atalhos em
@@ -259,6 +262,38 @@ Qualquer outro editor que filtre a seleção por um comando externo serve:
 `biblia filtro -f linha` lê referências na entrada e devolve o texto. Linha
 que não é referência volta igual. Com `-p`, o filtro devolve só o texto
 das passagens paralelas de cada referência, e nada mais.
+
+## Em qualquer programa (GNOME)
+
+O GNOME não tem menu de contexto para texto selecionado; no lugar dele,
+atalhos de teclado globais consultam o que estiver selecionado em
+qualquer programa (navegador, leitor de PDF, terminal): uma referência
+(`Jo 3.16`) ou um número de Strong (`G5293`, `H2617`).
+
+| Atalho | Referência | Número de Strong |
+| --- | --- | --- |
+| `Super+B` | mostra o texto numa janela | mostra o verbete (`strong -c`) |
+| `Super+Alt+B` | o mesmo, com o original hebraico/grego (`-s`) | mostra o verbete |
+| `Super+Shift+B` | copia o texto, pronto para colar (`formato_filtro`) | copia o verbete |
+
+Basta selecionar, sem `Ctrl+C`; sem seleção, vale o que estiver na área
+de transferência. Na janela de uma referência, o botão **Traduções…**
+abre a lista das traduções do site, com as atuais marcadas: escolha uma
+ou várias (lado a lado) e a janela reabre com elas. A escolha vale até
+fechar a janela; a próxima consulta volta às do `config.json`. Requer o `zenity` e, no Wayland, o `wl-clipboard` (no
+X11, o `xclip`). Com o `biblia` já no `PATH`:
+
+```sh
+sudo apt install zenity wl-clipboard
+biblia atalhos instalar
+```
+
+Os atalhos ficam em *Configurações › Teclado › Atalhos personalizados*,
+onde podem ser trocados; os que você já tinha ficam como estão. Eles
+chamam o `biblia` pelo caminho completo: se mudá-lo de lugar, rode o
+`instalar` de novo. `biblia atalhos remover` os apaga. Para copiar em
+outro formato, edite o comando do atalho no GNOME, acrescentando
+`-f md` (ou `typ`, `linha`, um modelo seu) ao `selecao copiar`.
 
 ## Onde ficam os arquivos
 

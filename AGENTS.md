@@ -52,14 +52,15 @@ internal/ubs/           UBS dictionaries (senses per Strong number and verse) an
 internal/grammar/       grammar legend terms → Portuguese description
 internal/download/      GitHub downloads pinned to a commit (shared by step and ubs)
 internal/config/        XDG paths and ~/.config/biblia/config.json
-cmd/biblia/             CLI: lookup, filtro, strong, versoes, formatos, dados, cache
+internal/desktop/       graphical session: selection, clipboard, zenity windows, GNOME shortcuts
+cmd/biblia/             CLI: lookup, filtro, strong, versoes, formatos, dados, cache, selecao, atalhos
 editors/sublime/        Sublime Text plugin (calls the binary)
 editors/vscode/         VS Code extension, plain JS, no build step (calls the binary)
 ```
 
 The dependency graph is enforced by [.go-arch-lint.yml](.go-arch-lint.yml)
-(`make arch-lint`): `bibliaonline`, `config`, `download` and `grammar`
-import nothing from this module; `step` and `ubs` import only
+(`make arch-lint`): `bibliaonline`, `config`, `desktop`, `download` and
+`grammar` import nothing from this module; `step` and `ubs` import only
 `download` (they never import `books`: book codes and numbers come from
 their own files); only `cmd` wires everything together.
 
@@ -128,6 +129,21 @@ their own files); only `cmd` wires everything together.
   reference with the text of its parallels and writes nothing else:
   editors insert that output after the selection, so echoing the input
   would duplicate it.
+- **Selection in any program (GNOME).** GNOME has no context menu for
+  selected text, so `biblia atalhos instalar` registers global shortcuts
+  (custom keybindings, through `gsettings`) that run `biblia selecao`
+  with the executable's absolute path. `selecao` reads the PRIMARY
+  selection, sends a Strong number (`G5293`) to `strong` and anything
+  else to the lookup or to `filtro`, and answers in a `zenity` window,
+  the clipboard or a notification. Programs that only take input
+  (`wl-copy`, `xclip -in`) go through `Runner.Feed`, without capturing
+  their output: they leave a process behind serving the clipboard, and
+  a captured pipe would never close. Reading the selection gives up
+  after 5 s (`desktop.ErrNoAnswer`): on GNOME, `wl-paste` needs a small
+  window to take the focus and waits forever when it cannot (a locked
+  screen). A reference's window has an extra button, "Traduções…"
+  (zenity prints the label and exits 1), that opens a checklist of the
+  catalog and runs the lookup again with the chosen `-v`.
 - **Editor format `auto`.** The plugins pick the paste format from the
   file (extension map in their settings, then the editor's language) and,
   for any other file, pass no `-f`, so `formato_filtro` decides.
@@ -141,6 +157,7 @@ make check       # lint + arch-lint + tests with the race detector (what CI runs
 make lint-md     # markdown lint (Node.js >= 20)
 make sublime     # symlink editors/sublime into Sublime's Packages/Biblia
 make vscode      # package and install the VS Code extension
+make desktop     # make install + biblia atalhos instalar (GNOME shortcuts)
 ```
 
 Tests never touch the network: the MCP server is faked (`lookup`) or

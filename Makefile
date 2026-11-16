@@ -22,7 +22,7 @@ SUBLIME_PACKAGES ?= $(firstword $(wildcard $(HOME)/.config/sublime-text-3/Packag
 
 .PHONY: help build install run fmt lint lint-fix lint-md arch-lint vuln \
 	test test-race coverage check clean \
-	sublime sublime-release vscode
+	sublime sublime-release vscode desktop
 
 help: ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-12s\033[0m %s\n", $$1, $$2}'
@@ -77,6 +77,9 @@ vscode: ## Package the VS Code extension and install it (requires Node.js and `c
 	@mkdir -p bin
 	@cd editors/vscode && npx --yes $(VSCE) package --no-dependencies --skip-license -o ../../bin/biblia.vsix
 	@code --install-extension bin/biblia.vsix --force
+
+desktop: install ## Install the CLI and register its GNOME shortcuts (Super+B, Super+Alt+B, Super+Shift+B)
+	@$(PREFIX)/bin/biblia atalhos instalar
 
 # The Sublime package is published from its own repository, as Package
 # Control requires (the package at the repository root); this tree stays

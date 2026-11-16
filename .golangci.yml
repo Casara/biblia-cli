@@ -102,7 +102,7 @@ linters:
         - 'net/http\.Client$'
         # The CLI's own option and state holders, filled by flag parsing
         # and as subcommands open what they need.
-        - '.*/cmd/biblia\.(env|session|lookupOptions|originals|dictSource|parallel)$'
+        - '.*/cmd/biblia\.(env|session|lookupOptions|originals|dictSource|parallel|selectionPlan)$'
         - 'net/url\.URL$'
     ireturn:
       allow:
@@ -138,6 +138,13 @@ linters:
         linters:
           - goconst
           - gosec
+      # desktop runs the session's own programs (wl-paste, zenity,
+      # gsettings) by name; the names are constants of the package, never
+      # input from the reader.
+      - path: internal/desktop/desktop\.go
+        linters:
+          - gosec
+        text: G204
       # Test data: fixed rows and expected values.
       - path: _test\.go
         linters:

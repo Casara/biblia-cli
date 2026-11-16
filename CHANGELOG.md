@@ -11,6 +11,16 @@ The editor plugins keep their own changelog:
 
 ## [Unreleased]
 
+### Added
+
+- `biblia selecao [consultar|original|copiar]` looks up what is selected
+  in any program: a reference opens its text, a Strong number (`G5293`)
+  its lexicon entry, in a window (zenity) or copied to the clipboard.
+  A reference's window has a **Traduções…** button that picks other
+  translations, one or several side by side, and shows it again.
+- `biblia atalhos instalar | remover` registers GNOME shortcuts for it:
+  `Super+B`, `Super+Alt+B` (with the original) and `Super+Shift+B` (copy).
+
 ## [0.1.0] - 2026-11-13
 
 ### Added
