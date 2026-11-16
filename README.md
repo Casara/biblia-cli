@@ -282,13 +282,28 @@ reader, terminal): a reference (`Jo 3.16`) or a Strong number (`G5293`,
 | `Super+Alt+B` | the same, with the original Hebrew/Greek (`-s`) | shows the lexicon entry |
 | `Super+Shift+B` | copies the text, ready to paste (`formato_filtro`) | copies the entry |
 
+![The Super+B window with Ef 1.22-23 in the ARA and the Traduções… button][gnome-consultar]
+
 Selecting is enough, no `Ctrl+C`; with nothing selected, the clipboard
 counts. In a reference's window, the **Traduções…** button opens the
 list of the site's translations, the current ones checked: pick one or
 several (side by side) and the window reopens with them. The choice
 lasts until the window closes; the next lookup goes back to
-`config.json`'s. Needs `zenity` and, on Wayland, `wl-clipboard` (`xclip` on X11).
-With `biblia` already on your `PATH`:
+`config.json`'s.
+
+![The translation list with check boxes, ARA checked][gnome-traducoes]
+
+![The Super+Alt+B window: Ef 1.22-23 and, word by word, the Greek with transliteration, Strong number, gloss and grammar][gnome-original]
+
+![The Super+B window on the number H7706: the entry for Shaddai in STEPBible and in the UBS Hebrew dictionary][gnome-strong]
+
+[gnome-consultar]: https://raw.githubusercontent.com/Casara/biblia-cli/main/docs/images/gnome-consultar.png
+[gnome-traducoes]: https://raw.githubusercontent.com/Casara/biblia-cli/main/docs/images/gnome-traducoes.png
+[gnome-original]: https://raw.githubusercontent.com/Casara/biblia-cli/main/docs/images/gnome-original.png
+[gnome-strong]: https://raw.githubusercontent.com/Casara/biblia-cli/main/docs/images/gnome-strong.png
+
+Needs `zenity` and, on Wayland, `wl-clipboard` (`xclip` on X11). With
+`biblia` already on your `PATH`:
 
 ```sh
 sudo apt install zenity wl-clipboard

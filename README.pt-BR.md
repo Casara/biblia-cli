@@ -276,12 +276,27 @@ qualquer programa (navegador, leitor de PDF, terminal): uma referência
 | `Super+Alt+B` | o mesmo, com o original hebraico/grego (`-s`) | mostra o verbete |
 | `Super+Shift+B` | copia o texto, pronto para colar (`formato_filtro`) | copia o verbete |
 
+![Janela do Super+B com Ef 1.22-23 na ARA e o botão Traduções…][gnome-consultar]
+
 Basta selecionar, sem `Ctrl+C`; sem seleção, vale o que estiver na área
 de transferência. Na janela de uma referência, o botão **Traduções…**
 abre a lista das traduções do site, com as atuais marcadas: escolha uma
 ou várias (lado a lado) e a janela reabre com elas. A escolha vale até
-fechar a janela; a próxima consulta volta às do `config.json`. Requer o `zenity` e, no Wayland, o `wl-clipboard` (no
-X11, o `xclip`). Com o `biblia` já no `PATH`:
+fechar a janela; a próxima consulta volta às do `config.json`.
+
+![Lista de traduções com caixas de marcar, a ARA marcada][gnome-traducoes]
+
+![Janela do Super+Alt+B: Ef 1.22-23 e, palavra por palavra, o grego com transliteração, Strong, glosa e gramática][gnome-original]
+
+![Janela do Super+B sobre o número H7706: o verbete de Shaddai na STEPBible e no dicionário hebraico da UBS][gnome-strong]
+
+[gnome-consultar]: https://raw.githubusercontent.com/Casara/biblia-cli/main/docs/images/gnome-consultar.png
+[gnome-traducoes]: https://raw.githubusercontent.com/Casara/biblia-cli/main/docs/images/gnome-traducoes.png
+[gnome-original]: https://raw.githubusercontent.com/Casara/biblia-cli/main/docs/images/gnome-original.png
+[gnome-strong]: https://raw.githubusercontent.com/Casara/biblia-cli/main/docs/images/gnome-strong.png
+
+Requer o `zenity` e, no Wayland, o `wl-clipboard` (no X11, o `xclip`).
+Com o `biblia` já no `PATH`:
 
 ```sh
 sudo apt install zenity wl-clipboard
