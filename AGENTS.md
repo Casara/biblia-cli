@@ -170,9 +170,12 @@ Three independent tags, each with its own version (steps, in Portuguese:
 - `sublime-0.2.0`: created by `make sublime-release V=...`, which pushes
   `editors/sublime` (git subtree split) to `Casara/biblia-sublime`, where
   Package Control reads it. Package Control rules shape the package: no
-  key bindings enabled by default (the keymap only has commented
-  suggestions), every command in the palette, settings and key bindings
-  opened with `edit_settings`, `.gitattributes` export-ignore for files
+  key bindings enabled by default (the suggestions live in
+  `Example.sublime-keymap`, which Sublime does not load), every command
+  in the palette, settings and key bindings opened with `edit_settings`,
+  the package name written as "Biblia", without the accent, wherever the
+  user types it or Sublime resolves it (palette, menu,
+  `Biblia.sublime-settings`, the `Packages/Biblia` folder), `.gitattributes` export-ignore for files
   of no use inside Sublime.
 
 Planned work, in Portuguese for the author: [docs/ROADMAP.md](docs/ROADMAP.md).
