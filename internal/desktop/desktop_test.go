@@ -189,7 +189,7 @@ func TestCopyAndShow(t *testing.T) {
 
 	want := []string{
 		"wl-copy",
-		"zenity --text-info --title=Biblia: Jo 3.16 --font=monospace --width=900 --height=600",
+		"zenity --text-info --title=Biblia: Jo 3.16 --font=monospace --width=900 --height=600 --ok-label=Fechar",
 	}
 	if !slices.Equal(run.calls, want) {
 		t.Errorf("calls = %q, want %q", run.calls, want)

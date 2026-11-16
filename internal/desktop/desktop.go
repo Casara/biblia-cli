@@ -179,6 +179,8 @@ func (s Session) Show(ctx context.Context, title, text string) error {
 		"--font=monospace",
 		"--width=900",
 		"--height=600",
+		// The same label as the window with the translations button.
+		"--ok-label=Fechar",
 	)
 	if err != nil {
 		return fmt.Errorf("desktop: showing the text: %w", err)
