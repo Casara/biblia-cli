@@ -182,7 +182,8 @@ func (s Session) Show(ctx context.Context, title, text string) error {
 		// The same label as the window with the translations button.
 		"--ok-label=Fechar",
 	)
-	if err != nil {
+	// Cancelar, Esc or the window's X: the reader just closed it.
+	if err != nil && !closedDialog(err) {
 		return fmt.Errorf("desktop: showing the text: %w", err)
 	}
 

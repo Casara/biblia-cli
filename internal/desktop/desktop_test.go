@@ -205,6 +205,19 @@ func TestCopyAndShow(t *testing.T) {
 	}
 }
 
+func TestShowClosedIsNotAnError(t *testing.T) {
+	window := "zenity --text-info --title=Biblia: G5293 --font=monospace --width=900 --height=600 --ok-label=Fechar"
+
+	for code, wantErr := range map[int]bool{1: false, 255: true} {
+		run := &fakeRunner{installed: installed("zenity"), exits: map[string]int{window: code}}
+
+		err := desktop.Session{Run: run}.Show(t.Context(), "Biblia: G5293", "verbete")
+		if (err != nil) != wantErr {
+			t.Errorf("exit %d: err = %v, wantErr %v", code, err, wantErr)
+		}
+	}
+}
+
 func TestAlertFallsBackToNotification(t *testing.T) {
 	run := &fakeRunner{installed: installed("notify-send")}
 
